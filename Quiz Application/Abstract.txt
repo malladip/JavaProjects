@@ -1,0 +1,19 @@
+Title 			: 	Quiz Application
+Application Type 	: 	Console level application
+Devloped Using	 	:	Java
+Backend			:	Files
+
+Description : 
+
+Quiz Application has two roles
+-- Student
+-- Admin
+
+Student can
+-- take a test
+-- review a test
+-- retake a test
+
+Admin can
+-- Add questions(multiple choice questions) into the quesion bank
+-- Configure the test
