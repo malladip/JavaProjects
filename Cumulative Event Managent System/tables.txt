@@ -1,0 +1,360 @@
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+
+DROP SCHEMA IF EXISTS `WebPortal` ;
+CREATE SCHEMA IF NOT EXISTS `WebPortal` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+SHOW WARNINGS;
+USE `WebPortal` ;
+
+-- -----------------------------------------------------
+-- Table `WebPortal`.`User`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `WebPortal`.`User` ;
+
+SHOW WARNINGS;
+CREATE  TABLE IF NOT EXISTS `WebPortal`.`User` (
+  `idUser` INT NOT NULL AUTO_INCREMENT ,
+  `UserName` VARCHAR(25) NOT NULL ,
+  `FirstName` VARCHAR(45) NOT NULL ,
+  `LastName` VARCHAR(45) NOT NULL ,
+  `Gender` VARCHAR(7) NOT NULL ,
+  `E-mailId` VARCHAR(45) NULL ,
+  `Mobile` BIGINT NULL ,
+  `Password` VARCHAR(45) NOT NULL ,
+  PRIMARY KEY (`idUser`) ,
+  UNIQUE INDEX `UserName_UNIQUE` (`UserName` ASC) )
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `WebPortal`.`Provider`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `WebPortal`.`Provider` ;
+
+SHOW WARNINGS;
+CREATE  TABLE IF NOT EXISTS `WebPortal`.`Provider` (
+  `idProvider` INT NOT NULL AUTO_INCREMENT ,
+  `UserName` VARCHAR(45) NOT NULL ,
+  `OrganizationName` VARCHAR(45) NOT NULL ,
+  `ContactName` VARCHAR(45) NOT NULL ,
+  `ContactNumber` BIGINT NOT NULL ,
+  `E-mailId` VARCHAR(45) NOT NULL ,
+  `Password` VARCHAR(45) NOT NULL ,
+  UNIQUE INDEX `UserName_UNIQUE` (`UserName` ASC) ,
+  PRIMARY KEY (`idProvider`) )
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `WebPortal`.`ServiceType`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `WebPortal`.`ServiceType` ;
+
+SHOW WARNINGS;
+CREATE  TABLE IF NOT EXISTS `WebPortal`.`ServiceType` (
+  `idServiceType` INT NOT NULL AUTO_INCREMENT ,
+  `Type` VARCHAR(45) NOT NULL ,
+  PRIMARY KEY (`idServiceType`) ,
+  UNIQUE INDEX `Type_UNIQUE` (`Type` ASC) )
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `WebPortal`.`OtherServices`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `WebPortal`.`OtherServices` ;
+
+SHOW WARNINGS;
+CREATE  TABLE IF NOT EXISTS `WebPortal`.`OtherServices` (
+  `idOtherServices` INT NOT NULL AUTO_INCREMENT ,
+  `Name` VARCHAR(45) NOT NULL ,
+  `Website` VARCHAR(45) NULL ,
+  `Desc` LONGTEXT NULL ,
+  `idServiceType` INT NOT NULL ,
+  `idProvider` INT NOT NULL ,
+  PRIMARY KEY (`idOtherServices`) ,
+  INDEX `idServiceType_OtherServices` (`idServiceType` ASC) ,
+  INDEX `idProvider_OtherServices` (`idProvider` ASC) ,
+  CONSTRAINT `idServiceType_OtherServices`
+    FOREIGN KEY (`idServiceType` )
+    REFERENCES `WebPortal`.`ServiceType` (`idServiceType` )
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `idProvider_OtherServices`
+    FOREIGN KEY (`idProvider` )
+    REFERENCES `WebPortal`.`Provider` (`idProvider` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `WebPortal`.`Venue`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `WebPortal`.`Venue` ;
+
+SHOW WARNINGS;
+CREATE  TABLE IF NOT EXISTS `WebPortal`.`Venue` (
+  `idVenue` INT NOT NULL AUTO_INCREMENT ,
+  `Name` VARCHAR(45) NOT NULL ,
+  `Website` VARCHAR(45) NULL ,
+  `Photo` BLOB NULL ,
+  `Cost` INT NULL ,
+  `MaxCapacity` INT NULL ,
+  `AC` TINYINT(1) NULL ,
+  `Desc` LONGTEXT NULL ,
+  `idProvider` INT NOT NULL ,
+  PRIMARY KEY (`idVenue`) ,
+  INDEX `idProvider_Venue` (`idProvider` ASC) ,
+  CONSTRAINT `idProvider_Venue`
+    FOREIGN KEY (`idProvider` )
+    REFERENCES `WebPortal`.`Provider` (`idProvider` )
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `WebPortal`.`CommentOtherServices`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `WebPortal`.`CommentOtherServices` ;
+
+SHOW WARNINGS;
+CREATE  TABLE IF NOT EXISTS `WebPortal`.`CommentOtherServices` (
+  `Review` TEXT NOT NULL ,
+  `idUser` INT NOT NULL ,
+  `idServiceType` INT NOT NULL ,
+  `idOtherServices` INT NOT NULL ,
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  INDEX `idUser_CommentOtherServices` (`idUser` ASC) ,
+  INDEX `idServiceType1_CommentOtherServices` (`idServiceType` ASC) ,
+  INDEX `idOtherServices1_CommentOtherServices` (`idOtherServices` ASC) ,
+  PRIMARY KEY (`id`) ,
+  CONSTRAINT `idUser_CommentOtherServices`
+    FOREIGN KEY (`idUser` )
+    REFERENCES `WebPortal`.`User` (`idUser` )
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `idServiceType1_CommentOtherServices`
+    FOREIGN KEY (`idServiceType` )
+    REFERENCES `WebPortal`.`ServiceType` (`idServiceType` )
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `idOtherServices1_CommentOtherServices`
+    FOREIGN KEY (`idOtherServices` )
+    REFERENCES `WebPortal`.`OtherServices` (`idOtherServices` )
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `WebPortal`.`RateOtherServices`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `WebPortal`.`RateOtherServices` ;
+
+SHOW WARNINGS;
+CREATE  TABLE IF NOT EXISTS `WebPortal`.`RateOtherServices` (
+  `Rating` INT NOT NULL ,
+  `idUser` INT NOT NULL ,
+  `idOtherServices` INT NOT NULL ,
+  `idServiceType` INT NOT NULL ,
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  INDEX `idUser_RateOtherServices` (`idUser` ASC) ,
+  INDEX `idServiceType_RateOtherServices` (`idServiceType` ASC) ,
+  INDEX `idOtherServices_RateOtherServices` (`idOtherServices` ASC) ,
+  PRIMARY KEY (`id`) ,
+  CONSTRAINT `idUser_RateOtherServices`
+    FOREIGN KEY (`idUser` )
+    REFERENCES `WebPortal`.`User` (`idUser` )
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `idServiceType_RateOtherServices`
+    FOREIGN KEY (`idServiceType` )
+    REFERENCES `WebPortal`.`ServiceType` (`idServiceType` )
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `idOtherServices_RateOtherServices`
+    FOREIGN KEY (`idOtherServices` )
+    REFERENCES `WebPortal`.`OtherServices` (`idOtherServices` )
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `WebPortal`.`AddressOtherServices`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `WebPortal`.`AddressOtherServices` ;
+
+SHOW WARNINGS;
+CREATE  TABLE IF NOT EXISTS `WebPortal`.`AddressOtherServices` (
+  `Line` VARCHAR(45) NULL ,
+  `Place` VARCHAR(45) NOT NULL ,
+  `City` VARCHAR(45) NOT NULL ,
+  `PinCode` INT NOT NULL ,
+  `PhoneNumber` BIGINT NOT NULL ,
+  `idOtherServices` INT NOT NULL ,
+  `idServiceType` INT NOT NULL ,
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  INDEX `idOtherServices_AddressOtherServices` (`idOtherServices` ASC) ,
+  INDEX `idServiceType_AddressOtherServices` (`idServiceType` ASC) ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `idOtherServices_UNIQUE` (`idOtherServices` ASC) ,
+  CONSTRAINT `idOtherServices_AddressOtherServices`
+    FOREIGN KEY (`idOtherServices` )
+    REFERENCES `WebPortal`.`OtherServices` (`idOtherServices` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `idServiceType_AddressOtherServices`
+    FOREIGN KEY (`idServiceType` )
+    REFERENCES `WebPortal`.`ServiceType` (`idServiceType` )
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `WebPortal`.`CommentVenue`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `WebPortal`.`CommentVenue` ;
+
+SHOW WARNINGS;
+CREATE  TABLE IF NOT EXISTS `WebPortal`.`CommentVenue` (
+  `Review` TEXT NOT NULL ,
+  `idUser` INT NOT NULL ,
+  `idVenue` INT NOT NULL ,
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  INDEX `idUser_CommentVenue` (`idUser` ASC) ,
+  INDEX `idVenue_CommentVenue` (`idVenue` ASC) ,
+  PRIMARY KEY (`id`) ,
+  CONSTRAINT `idUser_CommentVenue`
+    FOREIGN KEY (`idUser` )
+    REFERENCES `WebPortal`.`User` (`idUser` )
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `idVenue_CommentVenue`
+    FOREIGN KEY (`idVenue` )
+    REFERENCES `WebPortal`.`Venue` (`idVenue` )
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `WebPortal`.`RateVenue`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `WebPortal`.`RateVenue` ;
+
+SHOW WARNINGS;
+CREATE  TABLE IF NOT EXISTS `WebPortal`.`RateVenue` (
+  `Rating` INT NOT NULL ,
+  `idUser` INT NOT NULL ,
+  `idVenue` INT NOT NULL ,
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  INDEX `idUser_RateVenue` (`idUser` ASC) ,
+  INDEX `idVenue_RateVenue` (`idVenue` ASC) ,
+  PRIMARY KEY (`id`) ,
+  CONSTRAINT `idUser_RateVenue`
+    FOREIGN KEY (`idUser` )
+    REFERENCES `WebPortal`.`User` (`idUser` )
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `idVenue_RateVenue`
+    FOREIGN KEY (`idVenue` )
+    REFERENCES `WebPortal`.`Venue` (`idVenue` )
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `WebPortal`.`AddressVenue`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `WebPortal`.`AddressVenue` ;
+
+SHOW WARNINGS;
+CREATE  TABLE IF NOT EXISTS `WebPortal`.`AddressVenue` (
+  `Line` VARCHAR(45) NULL ,
+  `Place` VARCHAR(45) NOT NULL ,
+  `City` VARCHAR(45) NOT NULL ,
+  `PinCode` INT NOT NULL ,
+  `PhoneNumber` BIGINT NOT NULL ,
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `idVenue` INT NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `idVenue_AddressVenue` (`idVenue` ASC) ,
+  UNIQUE INDEX `idVenue_UNIQUE` (`idVenue` ASC) ,
+  CONSTRAINT `idVenue_AddressVenue`
+    FOREIGN KEY (`idVenue` )
+    REFERENCES `WebPortal`.`Venue` (`idVenue` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `WebPortal`.`SubServiceTypeVenue`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `WebPortal`.`SubServiceTypeVenue` ;
+
+SHOW WARNINGS;
+CREATE  TABLE IF NOT EXISTS `WebPortal`.`SubServiceTypeVenue` (
+  `SubType` VARCHAR(50) NOT NULL ,
+  `idVenue` INT NOT NULL ,
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  INDEX `idVenue_SubServiceTypeVenue` (`idVenue` ASC) ,
+  PRIMARY KEY (`id`) ,
+  CONSTRAINT `idVenue_SubServiceTypeVenue`
+    FOREIGN KEY (`idVenue` )
+    REFERENCES `WebPortal`.`Venue` (`idVenue` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `WebPortal`.`SubServiceTypeOtherServices`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `WebPortal`.`SubServiceTypeOtherServices` ;
+
+SHOW WARNINGS;
+CREATE  TABLE IF NOT EXISTS `WebPortal`.`SubServiceTypeOtherServices` (
+  `SubType` VARCHAR(50) NOT NULL ,
+  `idOtherServices` INT NOT NULL ,
+  `idServiceType` INT NOT NULL ,
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  INDEX `idOtherServices_SubServiceTypeOtherServices` (`idOtherServices` ASC) ,
+  INDEX `idServiceType_SubServiceTypeOtherServices` (`idServiceType` ASC) ,
+  PRIMARY KEY (`id`) ,
+  CONSTRAINT `idOtherServices_SubServiceTypeOtherServices`
+    FOREIGN KEY (`idOtherServices` )
+    REFERENCES `WebPortal`.`OtherServices` (`idOtherServices` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `idServiceType_SubServiceTypeOtherServices`
+    FOREIGN KEY (`idServiceType` )
+    REFERENCES `WebPortal`.`ServiceType` (`idServiceType` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

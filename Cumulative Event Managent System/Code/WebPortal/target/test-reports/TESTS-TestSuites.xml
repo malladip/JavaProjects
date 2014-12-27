@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites>
+  <testsuite errors="0" failures="0" hostname="sundeep-Inspiron-1545" id="0" name="VenueTests" package="com.WebPortal.domain" tests="1" time="2.589" timestamp="2012-05-25T07:06:20">
+      <properties />
+
+      <testcase classname="com.WebPortal.domain.VenueTests" name="testcreateVenue" time="2.55" />
+
+      <system-out><![CDATA[--Output from testcreateVenue--
+]]></system-out>
+
+      <system-err><![CDATA[--Output from testcreateVenue--
+]]></system-err>
+
+  </testsuite>
+</testsuites>

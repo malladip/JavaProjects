@@ -1,0 +1,24 @@
+Title 			: 	Cumulative Event Mnagement System
+Application Type 	: 	Web Application
+Devloped Using	 	:	Grails Framework
+Database		:	MySQL
+Server			: 	Apache Tomcat
+
+Description : 
+Cumulative Event Management System is to provide information about different venues, event organizers, food suppliers, and music providers, which are located in different areas on a single platform.
+
+It has 3 roles.
+-- Provider
+-- Registered User
+-- Non-registered User
+ 
+Provider can
+-- Login and enter the details of his service depending on his provider type
+-- Browse through the website and get the required service information
+
+Registered user can 
+-- Browse through the website and get the required service information
+-- Give feed back to the services by adding comments and rating.
+ 
+Non-registered user can 
+-- Browse through the website and get the required service information
