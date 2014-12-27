@@ -1,0 +1,23 @@
+Title 			: 	Public Transport System(PTS)
+Application Type 	: 	Web Application
+Devloped Using	 	:	Java
+Database		:	MySQL
+Server			: 	Apache Tomcat
+
+Description : 
+
+Public Transport System provides you the access of searching for various bus and train routes. 
+It has 3 roles.
+-- Provider
+-- Registered User
+-- Non-registered User
+ 
+Provider can
+-- Login and enter the details of a new bus(or train) depending on his provider type
+
+Registered user can 
+-- Browse and search through different bus and train schedules 
+-- Bookmark a particular bus(or train)
+ 
+Non-registered user can 
+-- Browse and search through various schedules
